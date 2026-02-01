@@ -246,12 +246,12 @@ def generate_report(data, sites):
             """
         
         site_count = len(item['prices'])
-        img_src = item['image'] if item['image'] else "Gemini_Generated_Image_2wqxp32wqxp32wqx.png"
+        img_src = item['image'] if item['image'] else "assets/logo_placeholder.png"
         
         grid_items_html += f"""
         <div class="product-card" data-category="{item['category']}" data-price="{min_price}" data-views="{item.get('views', 0)}" data-sitecount="{site_count}" data-key="{key}">
             <div class="card-image">
-                <img src="{img_src}" loading="lazy" alt="{item['display_name']}">
+                <img src="{img_src}" loading="lazy" alt="{item['display_name']}" onerror="this.onerror=null; this.src='assets/logo_placeholder.png';">
                 <span class="category-tag {item['category']}">{item['category']}</span>
             </div>
             <div class="card-info">
@@ -453,7 +453,7 @@ def generate_report(data, sites):
                         <a href="about.html">서비스소개</a> | 
                         <a href="terms.html">이용약관</a> | 
                         <a href="privacy.html" style="font-weight:bold;">개인정보처리방침</a> | 
-                        <a href="mailto:contact@juicepick.web.app">제휴/광고 문의</a>
+                        <a href="mailto:contact@juicepick.github.io">제휴/광고 문의</a>
                     </div>
                 </div>
                 <div class="footer-section">
