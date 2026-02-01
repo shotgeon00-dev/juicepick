@@ -420,11 +420,18 @@ def generate_report(data, sites):
 
             <section class="seo-content">
                 <div style="max-width: 1200px; margin: 0 auto;">
-                    <h2>💡 가장 스마트한 전자담배 액상 쇼핑, 액상픽(Juice Pick)</h2>
-                    <p>
-                        <strong>액상픽(Juice Pick)</strong>은 베이퍼 여러분의 합리적인 소비를 돕기 위해 탄생한 <strong>대한민국 No.1 전자담배 액상 가격비교 포털</strong>입니다. 
-                        수많은 온라인 샵에 흩어져 있는 과일 멘솔, 연초, 디저트 등 다양한 맛의 액상 가격을 실시간으로 수집하고 비교 분석합니다.
-                        <strong>입호흡 액상(30ml)</strong>을 중심으로 여러분이 찾는 인생 액상을 가장 저렴한 가격에 만나보실 수 있습니다.
+                    <h2>💡 스마트한 베이퍼들의 선택, 액상픽(Juice Pick)</h2>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        <strong>액상픽(Juice Pick)</strong>은 대한민국 전자담배 사용자들이 더 합리적이고 편리하게 액상을 구매할 수 있도록 돕는 <strong>국내 최대 규모의 액상 가격비교 플랫폼</strong>입니다. 
+                        수많은 온라인 쇼핑몰에 흩어져 있는 가격 정보를 일일이 찾아다니는 번거로움을 덜어드리기 위해, 우리는 실시간으로 데이터를 수집하고 분석하여 최신의 최저가 정보를 제공하고 있습니다.
+                    </p>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        '과일 멘솔', '연초', '디저트' 등 사용자의 다양한 취향을 고려한 정밀한 카테고리 분류와 강력한 검색 엔진을 통해, 입문자부터 숙련된 베이퍼까지 누구나 쉽고 빠르게 원하는 제품을 찾을 수 있습니다. 
+                        단순히 가격만 비교하는 것을 넘어, 실제 판매처 수와 조회수를 기반으로 한 <strong>인기 트렌드 분석</strong>을 통해 실패 없는 액상 선택을 도와드립니다.
+                    </p>
+                    <p style="line-height: 1.6;">
+                        액상픽은 투명한 정보 공개를 통해 건전한 베이핑 문화를 선도합니다. 불필요한 마케팅 거품을 걷어내고, 오직 품질과 가격 경쟁력으로 승부하는 우수한 판매처들을 발굴하여 여러분께 소개해 드립니다.
+                        매일 업데이트되는 3,000개 이상의 액상 데이터베이스와 함께, 당신의 인생 액상을 가장 저렴한 가격에 만나보세요. 
                     </p>
                 </div>
             </section>
@@ -441,10 +448,25 @@ def generate_report(data, sites):
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>액상픽 (JuicePick)</h4>
-                    <p>정확한 가격은 각 판매처에서 확인해 주세요.</p>
+                    <p style="margin-bottom: 15px;">대한민국 No.1 전자담배 액상 최저가 검색 포털</p>
+                    <div class="footer-links">
+                        <a href="about.html">서비스소개</a> | 
+                        <a href="terms.html">이용약관</a> | 
+                        <a href="privacy.html" style="font-weight:bold;">개인정보처리방침</a> | 
+                        <a href="mailto:contact@juicepick.web.app">제휴/광고 문의</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>책임의 한계와 고지</h4>
+                    <p style="font-size: 13px; color: #7f8c8d; line-height: 1.5;">
+                        액상픽은 통신판매중개자로서 쇼핑몰의 상품 정보와 가격을 수집하여 제공할 뿐, 해당 상품의 주문, 배송, 환불에 대한 의무와 책임은 각 판매처에 있습니다. 
+                        상품 정보에 대한 문의는 각 판매 사이트로 연락해 주시기 바랍니다.
+                    </p>
                 </div>
             </div>
-            <p style="text-align:center; margin-top:40px; font-size:12px; color:#777;">&copy; 2024 JuicePick. All rights reserved.</p>
+            <p style="text-align:center; margin-top:40px; font-size:12px; color:#777; border-top: 1px solid #353b48; padding-top: 20px;">
+                &copy; 2024 JuicePick. All rights reserved. Powered by JuiceHunter Engine.
+            </p>
         </footer>
 
         <script>
