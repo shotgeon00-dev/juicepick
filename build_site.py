@@ -3,14 +3,32 @@ from firebase_admin import credentials, db
 import re
 import difflib
 import json
-import time
+import os
+
+# .env 파일 로드 함수 (외부 라이브러리 없이 구현)
+def load_env():
+    env_path = ".env"
+    if os.path.exists(env_path):
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"): continue
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    os.environ[key.strip()] = value.strip()
+
+# 환경변수 로드 실행
+load_env()
 
 # 1. Firebase 초기화
 if not firebase_admin._apps:
     try:
-        cred = credentials.Certificate("key.json")
+        key_path = os.environ.get("FIREBASE_KEY_PATH", "key.json")
+        db_url = os.environ.get("FIREBASE_DB_URL", "https://juicehunter-default-rtdb.asia-southeast1.firebasedatabase.app")
+        
+        cred = credentials.Certificate(key_path)
         firebase_admin.initialize_app(cred, {
-            'databaseURL': 'https://juicehunter-default-rtdb.asia-southeast1.firebasedatabase.app'
+            'databaseURL': db_url
         })
     except Exception as e:
         print(f"⚠️ Firebase 초기화 경고 (로컬 테스트용 무시 가능): {e}")
@@ -228,7 +246,7 @@ def generate_report(data, sites):
             """
         
         site_count = len(item['prices'])
-        img_src = item['image'] if item['image'] else "assets/logo_placeholder.png"
+        img_src = item['image'] if item['image'] else "Gemini_Generated_Image_2wqxp32wqxp32wqx.png"
         
         grid_items_html += f"""
         <div class="product-card" data-category="{item['category']}" data-price="{min_price}" data-views="{item.get('views', 0)}" data-sitecount="{site_count}" data-key="{key}">
