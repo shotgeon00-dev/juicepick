@@ -228,7 +228,7 @@ def generate_report(data, sites):
             """
         
         site_count = len(item['prices'])
-        img_src = item['image'] if item['image'] else "Gemini_Generated_Image_2wqxp32wqxp32wqx.png"
+        img_src = item['image'] if item['image'] else "assets/logo_placeholder.png"
         
         grid_items_html += f"""
         <div class="product-card" data-category="{item['category']}" data-price="{min_price}" data-views="{item.get('views', 0)}" data-sitecount="{site_count}" data-key="{key}">
