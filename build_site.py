@@ -381,7 +381,7 @@ def generate_report(data, sites):
         <meta property="og:image" content="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/og_image.png">
         
         <!-- Main CSS (Relative Path with Version) -->
-        <link rel="stylesheet" href="assets/style.css?v={version_key}">
+        <link rel="stylesheet" href="assets/main.css?v={version_key}">
     </head>
     <body data-theme="light">
         <header>
