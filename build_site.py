@@ -263,10 +263,22 @@ def generate_report(data, sites):
             site_display_name = SITE_NAME_MAP.get(s_key, s_key.upper())
             shops_html += f"""
                 <div class='shop-row'>
-                    <span>{site_display_name}</span>
-                    <a href='{l}' target='_blank' class='price-link' onclick="updateViews('{key}')">{format(p, ',')}원</a>
+                    <span>{{site_display_name}}</span>
+                    <a href='{{l}}' target='_blank' class='price-link' onclick="updateViews('{{key}}')">{{format(p, ',')}}원</a>
                 </div>
             """
+        
+        # 판매처가 1개인 경우 바로 보낼 링크 준비
+        single_link = ""
+        if len(sorted_shops) == 1:
+            # 1개일 때 그 링크 가져오기 (l 변수는 루프 마지막 값이라 위험, 명시적으로 접근)
+            s_key_1, p_info_1 = sorted_shops[0]
+            single_link = p_info_1['link']
+            if not single_link: # 검색 링크 생성 로직 재사용 필요하나 복잡해지므로 여기선 단순 처리
+                 import urllib.parse
+                 q = urllib.parse.quote(item['display_name'])
+                 b = SEARCH_URLS.get(s_key_1, "")
+                 if b: single_link = f"{{b}}{{q}}"
         
         site_count = len(item['prices'])
         img_src = item['image'] if item['image'] else "assets/logo_placeholder.png"
@@ -284,7 +296,7 @@ def generate_report(data, sites):
                     <span class="label">최저가</span>
                     <span class="price-val">{format(min_price, ',')}원</span>
                 </div>
-                <button class="buy-btn" onclick="toggleShopList(this)">최저가 확인하기</button>
+                <button class="buy-btn" onclick="toggleShopList(this, '{key}', '{single_link}')">최저가 확인하기</button>
                 <div class="shop-list">
                     {shops_html}
                 </div>
@@ -584,12 +596,41 @@ def generate_report(data, sites):
                         execSort();
                         spinner.style.display = 'none';
                     }}, 100);
-                }} else {{
+                    }, 100);
+                } else {
                     execSort();
-                }}
-            }}
+                }
+            }
 
-            function filterCategory(cat, btn) {{
+            // [기능 추가] 조회수 증가 함수 (Firebase)
+            function updateViews(key) {
+                if (!firebase || !firebase.database) return;
+                const dbRef = firebase.database().ref('products/' + key + '/views');
+                dbRef.transaction(currentViews => {
+                    return (currentViews || 0) + 1;
+                }).catch(err => console.error("Views update failed", err));
+            }
+
+            // [기능 추가] 상점 목록 토글 또는 바로가기
+            function toggleShopList(btn, key, linkIfOne) {
+                // 만약 linkIfOne이 존재하면 (판매처가 1곳인 경우), 목록 열지 않고 바로 이동
+                if (linkIfOne && linkIfOne !== 'null' && linkIfOne !== '') {
+                    updateViews(key);
+                    window.open(linkIfOne, '_blank');
+                    return;
+                }
+
+                // 판매처가 여러 곳이면 목록 토글
+                const list = btn.nextElementSibling;
+                list.classList.toggle('active');
+                if (list.classList.contains('active')) {
+                    btn.textContent = '목록 닫기';
+                } else {
+                    btn.textContent = '최저가 확인하기';
+                }
+            }
+
+            function filterCategory(cat, btn) {
                 currentCategory = cat;
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
