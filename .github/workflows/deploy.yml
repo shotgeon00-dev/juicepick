@@ -30,14 +30,19 @@ jobs:
           FIREBASE_KEY_BASE64: ${{ secrets.FIREBASE_KEY_JSON }}
           FIREBASE_DB_URL: ${{ secrets.FIREBASE_DB_URL }}
         run: |
-          # Secrets에서 Key JSON 복원
-          echo "$FIREBASE_KEY_BASE64" | base64 -d > key.json
+          # Restore Key JSON from Secrets (Handle both Base64 and Raw JSON)
+          if echo "$FIREBASE_KEY_BASE64" | base64 -d > key.json 2>/dev/null; then
+            echo "Successfully decoded base64 key."
+          else
+            echo "Base64 decode failed, assuming raw JSON."
+            echo "$FIREBASE_KEY_BASE64" > key.json
+          fi
           
-          # .env 파일 생성
+          # Create .env file
           echo "FIREBASE_DB_URL=$FIREBASE_DB_URL" > .env
           echo "FIREBASE_KEY_PATH=key.json" >> .env
           
-          # 파일 확인 (디버깅)
+          # Debug: Check file existence (do not print content)
           ls -l key.json .env
 
       - name: Build Site
@@ -46,7 +51,7 @@ jobs:
         run: python build_site.py
 
       - name: Remove Secrets
-        run: rm key.json .env (보안을 위해 빌드 후 삭제)
+        run: rm key.json .env
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
