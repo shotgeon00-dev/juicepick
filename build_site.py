@@ -295,6 +295,10 @@ def generate_report(data, sites):
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="google-site-verification" content="oLmPfN2woDE_ChJzzVEV52goZJxhvC-theDmEock-vQ" />
         
+        <!-- Favicon & OG Image -->
+        <link rel="icon" type="image/png" href="assets/favicon.png">
+        <meta property="og:image" content="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/og_image.png">
+        
         <style>
             :root {{
                 --sky-blue: #00a8ff; --deep-sky: #0097e6; --bg: #f5f8fa; --text: #2f3640;
