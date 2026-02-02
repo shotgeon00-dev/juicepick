@@ -222,7 +222,7 @@ def process_data():
         with open("additional_images.json", "r", encoding="utf-8") as f:
             additional_images = json.load(f)
             for m_key, img_url in additional_images.items():
-                if m_key in merged_data and not merged_data[m_key]['image']:
+                if m_key in merged_data:
                      merged_data[m_key]['image'] = img_url
     except FileNotFoundError: pass
 
