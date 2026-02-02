@@ -304,7 +304,7 @@ def generate_report(data, sites):
                     <span class="label">최저가</span>
                     <span class="price-val">{format(min_price, ',')}원</span>
                 </div>
-                <button class="buy-btn" onclick="toggleShopList(this, '{key}', '{single_link}')">최저가 확인하기</button>
+                <button class="buy-btn" onclick="toggleShopList(this, '{key}', '{single_link.replace(chr(39), chr(92)+chr(39))}')">최저가 확인하기</button>
                 <div class="shop-list">
                     {shops_html}
                 </div>
@@ -341,7 +341,7 @@ def generate_report(data, sites):
                     <div class="card-info">
                         <h3 class="product-title">{r_item['display_name']}</h3>
                         <div class="price-section"><span class="price-val">{format(r_min_price, ',')}원~</span></div>
-                        <button class="buy-btn" onclick="document.getElementById('searchInput').value='{r_item['display_name']}'; applyFilters();">가격 비교하기</button>
+                        <button class="buy-btn" onclick="document.getElementById('searchInput').value='{r_item['display_name'].replace(chr(39), chr(92)+chr(39))}'; applyFilters();">가격 비교하기</button>
                     </div>
                 </div>
         """

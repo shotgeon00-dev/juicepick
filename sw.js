@@ -1,4 +1,4 @@
-const CACHE_NAME = 'juicepick-v6'; // Bump to v6: Minimize install failure risk
+const CACHE_NAME = 'juicepick-v7'; // Bump to v6: Minimize install failure risk
 
 // Minimal install dependencies to ensure SW installs 100% of the time.
 // External assets and non-critical pages moved to runtime caching.
