@@ -4,6 +4,7 @@ import re
 import difflib
 import json
 import os
+import time
 
 # .env 파일 로드 함수 (외부 라이브러리 없이 구현)
 def load_env():
@@ -206,9 +207,13 @@ def process_data():
             m_key = norm['match_key']
 
             if m_key not in merged_data:
+                # [수정] Firebase의 제품별 views 노드에서 조회수를 가져옴
+                global_item = all_data.get(m_key, {})
+                views = global_item.get('views', 0) if isinstance(global_item, dict) else 0
+                
                 merged_data[m_key] = {
                     "display_name": norm['display_name'], "category": norm['category'],
-                    "volume": norm['volume'], "image": img, "prices": {}, "views": 0 
+                    "volume": norm['volume'], "image": img, "prices": {}, "views": views 
                 }
             
             current_site_price = merged_data[m_key]["prices"].get(site, {}).get("price", 999999)
@@ -302,10 +307,47 @@ def generate_report(data, sites):
                 </div>
                 <div class="views-count">
                     <i class="fas fa-eye"></i> 조회 수: <span class="v-val">{item.get('views', 0)}</span>회
-                </div>
-            </div>
         </div>
         """
+
+    # [NEW] 추천 시스템 로직 (사진 있고 조회수 높고 판매처 많은 순)
+    # 1. 사진이 있는 상품 필터 (logo_placeholder 제외)
+    has_img_items = [
+        (k, i) for k, i in data.items() 
+        if i.get('image') and 'logo_placeholder' not in i.get('image')
+    ]
+    # 2. 조회수 높고 판매처 많은 순으로 정렬
+    recommended_items = sorted(has_img_items, key=lambda x: (x[1].get('views', 0), len(x[1]['prices'])), reverse=True)[:3]
+    
+    # 추천 HTML 생성
+    featured_html = ""
+    for idx, (r_key, r_item) in enumerate(recommended_items):
+        rank_badge = f'<div style="padding: 5px 10px; background: var(--primary); color: white; font-weight: bold; position: absolute; top: 0; left: 0; z-index: 10;">👑 추천 {idx+1}위</div>' if idx == 0 else ""
+        cat_class = r_item['category'].replace('/', '-')
+        
+        # 최저가 찾기
+        r_min_price = min([p['price'] for p in r_item['prices'].values()])
+        
+        featured_html += f"""
+                <div class="product-card" style="position: relative;">
+                    {rank_badge}
+                    <div class="card-image">
+                        <img src="{r_item['image']}" alt="{r_item['display_name']}">
+                        <span class="category-tag {cat_class}">{r_item['category']}</span>
+                    </div>
+                    <div class="card-info">
+                        <h3 class="product-title">{r_item['display_name']}</h3>
+                        <div class="price-section"><span class="price-val">{format(r_min_price, ',')}원~</span></div>
+                        <button class="buy-btn" onclick="document.getElementById('searchInput').value='{r_item['display_name']}'; applyFilters();">가격 비교하기</button>
+                    </div>
+                </div>
+        """
+
+    # Firebase URL 가져오기 (환경변수 또는 기본값)
+    db_url = os.environ.get("FIREBASE_DB_URL", "https://juicehunter-default-rtdb.asia-southeast1.firebasedatabase.app")
+
+    # 캐시 버스팅을 위한 버전키 생성 (현재 시간)
+    version_key = str(int(time.time()))
 
     html_template = f"""
     <!DOCTYPE html>
@@ -332,22 +374,21 @@ def generate_report(data, sites):
         <meta name="google-site-verification" content="oLmPfN2woDE_ChJzzVEV52goZJxhvC-theDmEock-vQ" />
         
         <!-- Favicon & OG Image -->
-        <link rel="icon" type="image/png" href="assets/favicon.png">
+        <link rel="icon" type="image/png" href="assets/favicon.png?v={version_key}">
         <meta property="og:image" content="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/og_image.png">
         
-        <!-- Main CSS (Relative Path) -->
-        <link rel="stylesheet" href="assets/style.css">
+        <!-- Main CSS (Relative Path with Version) -->
+        <link rel="stylesheet" href="assets/style.css?v={version_key}">
     </head>
-    <body>
+    <body data-theme="light">
         <header>
             <nav class="nav-container">
                 <a href="index.html" class="site-name">액상픽</a>
                 <ul class="nav-menu">
-                    <!-- '액상검색' 삭제 요청 반영 -->
                     <li><a href="blog/index.html">가이드</a></li>
                     <li><a href="board.html">자유게시판</a></li>
                     <li><a href="about.html">서비스소개</a></li>
-                    <li><button onclick="toggleTheme()" class="theme-toggle"><i class="fas fa-moon" id="theme-icon"></i></button></li>
+                    <li><button onclick="toggleTheme()" class="theme-toggle" aria-label="테마 전환"><i class="fas fa-moon" id="theme-icon"></i></button></li>
                 </ul>
             </nav>
         </header>
@@ -365,47 +406,11 @@ def generate_report(data, sites):
             </div>
         </section>
 
-        <!-- [NEW] 추천 인기 액상 (비어 보이는 공간 채우기) -->
-        <section class="featured-section" style="max-width: 1200px; margin: 40px auto 20px; px; padding: 0 20px;">
-            <h2 style="font-size: 24px; margin-bottom: 20px; color: var(--text);">🔥 오늘의 MD 추천 인기 액상 TOP 3</h2>
+        <!-- [DYNAMIC] 추천 인기 액상 -->
+        <section class="featured-section" style="max-width: 1200px; margin: 40px auto 20px; padding: 0 20px;">
+            <h2 style="font-size: 24px; margin-bottom: 20px; color: var(--text);">🔥 실시간 인기 급상승 액상 TOP 3</h2>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                <!-- 추천 1 -->
-                <div class="product-card" style="border: 2px solid var(--sky-blue);">
-                    <div style="padding: 5px 10px; background: var(--sky-blue); color: white; font-weight: bold; position: absolute; top: 0; left: 0; z-index: 10;">👑 베스트 1위</div>
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/logo_placeholder.png" alt="알로에 베라">
-                        <span class="category-tag 과일/멘솔">과일/멘솔</span>
-                    </div>
-                    <div class="card-info">
-                        <h3 class="product-title">디톡스 알로에 베라 9mg</h3>
-                        <div class="price-section"><span class="price-val">최저가 보기</span></div>
-                        <button class="buy-btn" onclick="document.getElementById('searchInput').value='알로에'; applyFilters();">가격 비교하기</button>
-                    </div>
-                </div>
-                <!-- 추천 2 -->
-                <div class="product-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/logo_placeholder.png" alt="마르키사">
-                        <span class="category-tag 과일">과일</span>
-                    </div>
-                    <div class="card-info">
-                        <h3 class="product-title">테일러 마르키사 오리지널</h3>
-                        <div class="price-section"><span class="price-val">인기 급상승</span></div>
-                        <button class="buy-btn" onclick="document.getElementById('searchInput').value='마르키사'; applyFilters();">가격 비교하기</button>
-                    </div>
-                </div>
-                <!-- 추천 3 -->
-                <div class="product-card">
-                    <div class="card-image">
-                        <img src="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/logo_placeholder.png" alt="노멘솔">
-                        <span class="category-tag 디저트">디저트</span>
-                    </div>
-                    <div class="card-info">
-                        <h3 class="product-title">크림 오브 더 크랍 (크오크)</h3>
-                        <div class="price-section"><span class="price-val">스테디셀러</span></div>
-                        <button class="buy-btn" onclick="document.getElementById('searchInput').value='크오크'; applyFilters();">가격 비교하기</button>
-                    </div>
-                </div>
+                {featured_html}
             </div>
         </section>
         <main>
@@ -480,10 +485,20 @@ def generate_report(data, sites):
             </div>
             <p style="text-align:center; margin-top:40px; font-size:12px; color:#777; border-top: 1px solid #353b48; padding-top: 20px;">
                 &copy; 2026 JuicePick. All rights reserved. Powered by JuiceHunter Engine.
+                <br><span style="opacity: 0.5;">Build: {version_key}</span>
             </p>
         </footer>
 
         <script>
+            // Firebase Config Injection
+            const firebaseConfig = {{
+                databaseURL: "{db_url}"
+            }};
+            // Initialize Firebase
+            if (!firebase.apps.length) {{
+                firebase.initializeApp(firebaseConfig);
+            }}
+
             let allCards = [];
             let filteredCards = [];
             let currentPage = 1;
@@ -495,8 +510,88 @@ def generate_report(data, sites):
                 allCards = Array.from(grid.children);
                 filteredCards = [...allCards];
                 
+                // [NEW] 실시간 조회수 동기화 logic
+                syncRealtimeViews();
+
                 if ('serviceWorker' in navigator) {{
-                    navigator.serviceWorker.register('sw.js');
+                    // GH Pages 캐시를 뚫기 위해 버전 쿼리 스트링 다시 도입
+                    navigator.serviceWorker.register('sw.js?v={version_key}').then(reg => {{
+                        reg.update(); // 매 로드 시 업데이트 확인
+
+                        reg.onupdatefound = () => {{
+                            const installingWorker = reg.installing;
+                            installingWorker.onstatechange = () => {{
+                                if (installingWorker.state === 'installed') {{
+                                    if (navigator.serviceWorker.controller) {{
+                                        showUpdateNotification();
+                                    }}
+                                }}
+                            }};
+                        }};
+                    }});
+                }}
+                
+                // [NEW] 버전 체크 logic (강제 새로고침 유도)
+                checkVersionSync('{version_key}');
+
+                initTheme();
+                checkIOS();
+                sortData();
+            }};
+
+            // [NEW] Firebase 실시간 조회수 동기화
+            function syncRealtimeViews() {{
+                if (!firebase || !firebase.database) return;
+                const dbRef = firebase.database().ref('products');
+                
+                dbRef.on('value', (snapshot) => {{
+                    const data = snapshot.val();
+                    if (!data) return;
+                    
+                    document.querySelectorAll('.product-card[data-key]').forEach(card => {{
+                        const key = card.dataset.key;
+                        if (data[key] && data[key].views !== undefined) {{
+                            const views = data[key].views;
+                            card.dataset.views = views;
+                            const vValNode = card.querySelector('.v-val');
+                            if (vValNode) vValNode.innerText = views;
+                        }}
+                    }});
+                }});
+            }}
+
+            // [NEW] 버전 체크 (LocalStorage 기반 강제 새로고침)
+            function checkVersionSync(currentVersion) {{
+                const savedVersion = localStorage.getItem('site_version');
+                if (savedVersion && savedVersion !== currentVersion) {{
+                    console.log('New version detected:', currentVersion);
+                    localStorage.setItem('site_version', currentVersion);
+                    // 1초 후 강제 새로고침 (캐시 무시)
+                    setTimeout(() => {{
+                        window.location.reload(true);
+                    }}, 1000);
+                }} else {{
+                    localStorage.setItem('site_version', currentVersion);
+                }}
+            }}
+            function showUpdateNotification() {{
+                    const notify = document.createElement('div');
+                    notify.style.cssText = `
+                        position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                        background: var(--primary); color: white; padding: 15px 25px;
+                        border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                        z-index: 10000; display: flex; align-items: center; gap: 15px;
+                        font-weight: 600; font-family: 'Pretendard', sans-serif;
+                    `;
+                    notify.innerHTML = `
+                        <span>✨ 새로운 버전이 준비되었습니다!</span>
+                        <button onclick="location.reload()" style="
+                            background: white; color: var(--primary); border: none;
+                            padding: 5px 15px; border-radius: 20px; cursor: pointer;
+                            font-weight: 800;
+                        ">업데이트</button>
+                    `;
+                    document.body.appendChild(notify);
                 }}
                 
                 initTheme();
@@ -636,7 +731,7 @@ def generate_report(data, sites):
                 
                 // 검색어 유지한 채로 카테고리 변경
                 applyFilters();
-            }}}
+            }}
 
             function renderCards() {{
                 const grid = document.getElementById('productGrid');
@@ -693,14 +788,7 @@ def generate_report(data, sites):
                 return btn;
             }}
 
-            function toggleShopList(btn) {{
-                const list = btn.nextElementSibling;
-                list.classList.toggle('active');
-            }}
-            
-             function updateViews(key) {{
-                 firebase.database().ref('products').orderByChild('display_name').equalTo(key).once('value', snapshot => {{ }});
-            }}
+
         </script>
     </body>
     </html>
