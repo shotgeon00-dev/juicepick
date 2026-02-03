@@ -13,14 +13,30 @@
             --primary: #4facfe;
             --secondary: #00f2fe;
             --text: #2f3640;
+            --text-light: #5f6e7c;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(255, 255, 255, 0.8);
+            --email-bg: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        [data-theme="dark"] {
+            --text: #f5f6fa;
+            --text-light: #dcdde1;
+            --bg-gradient: linear-gradient(135deg, #1e272e 0%, #2f3640 100%);
+            --card-bg: rgba(30, 39, 46, 0.95);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --email-bg: linear-gradient(135deg, #2f3640 0%, #1e272e 100%);
         }
 
         body {
             font-family: 'Pretendard', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 40px 20px;
             margin: 0;
+            color: var(--text);
         }
 
         .container {
@@ -28,11 +44,17 @@
             margin: 0 auto;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 20px;
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
@@ -43,12 +65,26 @@
             opacity: 0.7;
         }
 
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 18px;
+        }
+
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             padding: 50px 40px;
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--card-border);
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
@@ -77,23 +113,23 @@
         }
 
         .subtitle {
-            color: #7f8c8d;
+            color: var(--text-light);
             font-size: 16px;
             margin-bottom: 35px;
             line-height: 1.6;
         }
 
         .email-box {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: var(--email-bg);
             padding: 25px 30px;
             border-radius: 16px;
             margin-bottom: 25px;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--card-border);
         }
 
         .email-label {
             font-size: 13px;
-            color: #7f8c8d;
+            color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 10px;
@@ -142,7 +178,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: white;
+            background: transparent;
             color: var(--primary);
             border: 2px solid var(--primary);
             padding: 12px 26px;
@@ -162,15 +198,19 @@
         .notice {
             margin-top: 30px;
             padding: 20px;
-            background: #fff9e6;
+            background: rgba(255, 193, 7, 0.1);
             border-radius: 12px;
             border-left: 4px solid #ffc107;
             text-align: left;
         }
 
+        [data-theme="dark"] .notice {
+            background: rgba(255, 193, 7, 0.05);
+        }
+
         .notice-title {
             font-weight: 700;
-            color: #856404;
+            color: #ffc107;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -179,7 +219,7 @@
 
         .notice-text {
             font-size: 14px;
-            color: #856404;
+            color: var(--text-light);
             line-height: 1.6;
         }
 
@@ -214,9 +254,14 @@
 
 <body>
     <div class="container">
-        <a href="index.html" class="back-link">
-            <i class="fas fa-arrow-left"></i> 메인으로 돌아가기
-        </a>
+        <div class="top-bar">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> 메인으로 돌아가기
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+        </div>
 
         <div class="card">
             <div class="icon-circle">
@@ -262,6 +307,27 @@
     </div>
 
     <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
         function copyEmail() {
             navigator.clipboard.writeText('shotgeon00@gmail.com').then(() => {
                 const toast = document.getElementById('toast');
@@ -271,6 +337,8 @@
                 }, 2000);
             });
         }
+
+        initTheme();
     </script>
 </body>
 

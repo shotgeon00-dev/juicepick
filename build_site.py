@@ -301,8 +301,12 @@ def generate_report(data, sites):
         <div class="product-card" data-category="{item['category']}" data-price="{min_price}" data-views="{item.get('views', 0)}" data-sitecount="{site_count}" data-key="{key}">
             <div class="card-image">
                 <img src="{img_src}" loading="lazy" alt="{item['display_name']}" 
-                     onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/logo_placeholder.png';">
+                     onload="this.classList.add('loaded')"
+                     onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/logo_placeholder.png'; this.classList.add('loaded');">
                 <span class="category-tag {item['category']}">{item['category']}</span>
+                <button class="fav-btn" onclick="toggleFavorite('{key}', this)" aria-label="즐겨찾기">
+                    <i class="far fa-heart"></i>
+                </button>
             </div>
             <div class="card-info">
                 <h3 class="product-title">{item['display_name']}</h3>
@@ -384,6 +388,37 @@ def generate_report(data, sites):
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="google-site-verification" content="oLmPfN2woDE_ChJzzVEV52goZJxhvC-theDmEock-vQ" />
         
+        <!-- JSON-LD Structured Data for SEO -->
+        <script type="application/ld+json">
+        {{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "액상픽",
+            "alternateName": "JuicePick",
+            "url": "https://juicepick.github.io",
+            "description": "국내 최대 전자담배 액상 가격비교 플랫폼",
+            "potentialAction": {{
+                "@type": "SearchAction",
+                "target": "https://juicepick.github.io/?q={{search_term_string}}",
+                "query-input": "required name=search_term_string"
+            }}
+        }}
+        </script>
+        <script type="application/ld+json">
+        {{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "액상픽",
+            "url": "https://juicepick.github.io",
+            "logo": "https://juicepick.github.io/assets/logo_placeholder.png",
+            "contactPoint": {{
+                "@type": "ContactPoint",
+                "email": "shotgeon00@gmail.com",
+                "contactType": "customer service"
+            }}
+        }}
+        </script>
+        
         <!-- Favicon & OG Image -->
         <link rel="icon" type="image/png" href="assets/favicon.png?v={version_key}">
         <meta property="og:image" content="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/og_image.png">
@@ -427,6 +462,7 @@ def generate_report(data, sites):
         <main>
             <div class="toolbar">
                 <div class="cat-filters">
+                    <button class="filter-btn fav-filter" onclick="filterFavorites(this)" title="즐겨찾기"><i class="fas fa-heart"></i></button>
                     <button class="filter-btn active" onclick="filterCategory('all', this)">전체</button>
                     <button class="filter-btn" onclick="filterCategory('과일/멘솔', this)">과일/멘솔</button>
                     <button class="filter-btn" onclick="filterCategory('연초', this)">연초</button>
@@ -548,6 +584,7 @@ def generate_report(data, sites):
                 initTheme();
                 checkIOS();
                 sortData();
+                loadFavorites();
             }};
 
             // [NEW] Firebase 실시간 조회수 동기화
@@ -736,6 +773,61 @@ def generate_report(data, sites):
                 }} else {{
                     btn.textContent = '최저가 확인하기';
                 }}
+            }}
+
+            // [NEW] 즐겨찾기 기능
+            function getFavorites() {{
+                try {{
+                    return JSON.parse(localStorage.getItem('juicepick_favorites') || '[]');
+                }} catch(e) {{
+                    return [];
+                }}
+            }}
+
+            function toggleFavorite(key, btn) {{
+                event.stopPropagation();
+                const favs = getFavorites();
+                const idx = favs.indexOf(key);
+                const icon = btn.querySelector('i');
+                
+                if (idx > -1) {{
+                    favs.splice(idx, 1);
+                    icon.className = 'far fa-heart';
+                    btn.classList.remove('active');
+                }} else {{
+                    favs.push(key);
+                    icon.className = 'fas fa-heart';
+                    btn.classList.add('active');
+                }}
+                localStorage.setItem('juicepick_favorites', JSON.stringify(favs));
+            }}
+
+            function loadFavorites() {{
+                const favs = getFavorites();
+                document.querySelectorAll('.product-card').forEach(card => {{
+                    const key = card.dataset.key;
+                    const btn = card.querySelector('.fav-btn');
+                    if (btn && favs.includes(key)) {{
+                        btn.querySelector('i').className = 'fas fa-heart';
+                        btn.classList.add('active');
+                    }}
+                }});
+            }}
+
+            let showFavoritesOnly = false;
+            function filterFavorites(btn) {{
+                showFavoritesOnly = !showFavoritesOnly;
+                btn.classList.toggle('active', showFavoritesOnly);
+                
+                if (showFavoritesOnly) {{
+                    const favs = getFavorites();
+                    filteredCards = allCards.filter(c => favs.includes(c.dataset.key));
+                }} else {{
+                    applyFilters();
+                    return;
+                }}
+                currentPage = 1;
+                renderCards();
             }}
 
             function filterCategory(cat, btn) {{
