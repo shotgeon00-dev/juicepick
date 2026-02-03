@@ -190,7 +190,7 @@ def process_data():
     
     if not all_data: return {}, []
 
-    sites = ['modu', 'juice24', 'tjf', 'siasiu', 'vapemonster', 'juice99']
+    sites = ['modu', 'juice24', 'tjf', 'siasiu', 'vapemonster', 'juice99', 'juicebox']
     merged_data = {}
     merged_data = {}
     print("[INFO] Normalizing & Merging Data...")
@@ -219,6 +219,10 @@ def process_data():
                     "volume": norm['volume'], "image": img, "prices": {}, "views": views 
                 }
             
+            # [사용자 요청] 쥬스박스 상품명이 가장 정확하므로 쥬스박스 이름을 우선적으로 표시
+            if site == 'juicebox':
+                merged_data[m_key]["display_name"] = raw_name
+            
             current_site_price = merged_data[m_key]["prices"].get(site, {}).get("price", 999999)
             if price < current_site_price:
                 merged_data[m_key]["prices"][site] = { "price": price, "link": link }
@@ -242,7 +246,8 @@ SEARCH_URLS = {
     'tjf': "https://www.tjf.kr/product/search.html?keyword=",
     'juice99': "https://99juice.co.kr/product/search.html?keyword=",
     'siasiu': "https://siasiu.com/product/search.html?keyword=", 
-    'vapemonster': "https://vapemonster.co.kr/goods/goods_search.php?keyword="
+    'vapemonster': "https://vapemonster.co.kr/goods/goods_search.php?keyword=",
+    'juicebox': "https://juicebox.co.kr/product/search.html?keyword="
 }
 
 def generate_report(data, sites):
