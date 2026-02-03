@@ -23,11 +23,11 @@
         <meta name="google-site-verification" content="oLmPfN2woDE_ChJzzVEV52goZJxhvC-theDmEock-vQ" />
         
         <!-- Favicon & OG Image -->
-        <link rel="icon" type="image/png" href="assets/favicon.png?v=1770109334">
+        <link rel="icon" type="image/png" href="assets/favicon.png?v=1770110034">
         <meta property="og:image" content="https://raw.githubusercontent.com/juicepick/juicepick.github.io/master/assets/og_image.png">
         
         <!-- Main CSS (Relative Path with Version) -->
-        <link rel="stylesheet" href="assets/main.css?v=1770109334">
+        <link rel="stylesheet" href="assets/main.css?v=1770110034">
     </head>
     <body data-theme="light">
         <header>
@@ -52905,7 +52905,7 @@
             </div>
             <p style="text-align:center; margin-top:40px; font-size:12px; color:#777; border-top: 1px solid #353b48; padding-top: 20px;">
                 &copy; 2026 JuicePick. All rights reserved. Powered by JuiceHunter Engine.
-                <br><span style="opacity: 0.5;">Build: 1770109334</span>
+                <br><span style="opacity: 0.5;">Build: 1770110034</span>
             </p>
         </footer>
 
@@ -52922,7 +52922,7 @@
             let allCards = [];
             let filteredCards = [];
             let currentPage = 1;
-            const itemsPerPage = 52;
+            const itemsPerPage = 40;
             let currentCategory = 'all';
 
             window.onload = function() {
@@ -52935,7 +52935,7 @@
 
                 if ('serviceWorker' in navigator) {
                     // GH Pages 캐시를 뚫기 위해 버전 쿼리 스트링 다시 도입
-                    navigator.serviceWorker.register('sw.js?v=1770109334').then(reg => {
+                    navigator.serviceWorker.register('sw.js?v=1770110034').then(reg => {
                         reg.update(); // 매 로드 시 업데이트 확인
 
                         reg.onupdatefound = () => {
@@ -52952,7 +52952,7 @@
                 }
                 
                 // [NEW] 버전 체크 logic (강제 새로고침 유도)
-                checkVersionSync('1770109334');
+                checkVersionSync('1770110034');
 
                 initTheme();
                 checkIOS();
@@ -53021,11 +53021,6 @@
                         setTimeout(() => window.location.reload(), 200);
                     };
                 }
-                
-                initTheme();
-                checkIOS();
-                sortData();
-            };
 
             // [수정] 기본 테마: 라이트모드 고정 (시스템 설정 무시)
             function initTheme() {

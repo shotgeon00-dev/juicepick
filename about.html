@@ -4,14 +4,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Introduction | JuiceHunter</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8789660340754359"
-        crossorigin="anonymous"></script>
+    <title>서비스 소개 | 액상픽</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <link rel="stylesheet" href="assets/style.css">
     <style>
-        /* About 페이지 전용 스타일 */
+        :root {
+            --primary: #4facfe;
+            --secondary: #00f2fe;
+            --text: #2f3640;
+            --text-light: #5f6e7c;
+        }
+
         body {
-            padding-top: 0;
+            font-family: 'Pretendard', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-bottom: 40px;
+            margin: 0;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+        }
+
+        .site-name {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--primary);
         }
 
         .hero-banner {
@@ -20,7 +80,18 @@
             padding: 60px 20px;
             text-align: center;
             margin-bottom: 40px;
-            border-radius: 0 0 30px 30px;
+        }
+
+        .hero-banner h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+        }
+
+        .hero-banner p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin: 0;
         }
 
         .content-container {
@@ -29,20 +100,28 @@
             padding: 0 20px;
         }
 
-        h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 10px;
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
         }
 
         h2 {
             color: var(--text);
-            font-size: 24px;
-            margin-top: 40px;
+            font-size: 22px;
+            margin-top: 30px;
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--primary);
             display: inline-block;
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
         }
 
         p {
@@ -52,60 +131,87 @@
             line-height: 1.8;
         }
 
+        ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        li strong {
+            color: var(--primary);
+        }
+
         .highlight {
             font-weight: bold;
-            color: var(--accent);
+            color: var(--primary);
+        }
+
+        .footer-links {
+            max-width: 800px;
+            margin: 30px auto 0;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #666;
+            margin: 0 8px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-banner h1 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: 25px;
+            }
         }
     </style>
 </head>
 
 <body>
-    color: #333;
-    max-width: 800px;
-    margin: 0 auto;
-    background: #f9f9f9;
-    }
+    <header>
+        <nav class="nav-container">
+            <a href="index.html" class="site-name">액상픽</a>
+            <ul class="nav-menu">
+                <li><a href="blog/index.html">가이드</a></li>
+                <li><a href="board.html">자유게시판</a></li>
+                <li><a href="about.html" class="active">서비스소개</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    .card {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
+    <div class="hero-banner">
+        <h1>액상픽 (JuicePick)</h1>
+        <p>국내 최대 전자담배 액상 가격비교 플랫폼</p>
+    </div>
 
-    h1 {
-    color: #1a237e;
-    margin-bottom: 30px;
-    }
-
-    h2 {
-    margin-top: 30px;
-    color: #303f9f;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-    }
-
-    .back-link {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #1a237e;
-    text-decoration: none;
-    font-weight: bold;
-    }
-    </style>
-    </head>
-
-    <body>
-        <a href="index.html" class="back-link">← 메인으로 돌아가기</a>
+    <div class="content-container">
         <div class="card">
-            <h1>액상픽 (JuicePick) 소개</h1>
-            <p><strong>액상픽</strong>은 대한민국 베이퍼들이 가장 합리적인 가격으로 액상을 구매할 수 있도록 돕는 <strong>국내 최대 액상 가격 비교 포털</strong>입니다.</p>
-
-            <h2>서비스 철학</h2>
+            <h2>🎯 서비스 소개</h2>
+            <p><span class="highlight">액상픽</span>은 대한민국 베이퍼들이 가장 합리적인 가격으로 액상을 구매할 수 있도록 돕는 <span class="highlight">국내
+                    최대 액상 가격 비교 포털</span>입니다.</p>
             <p>수많은 온라인 액상 몰에 흩어져 있는 가격 정보를 실시간으로 수집하여 투명하게 공개합니다. 우리는 사용자가 단 10초 만에 최적의 선택을 할 수 있는 스마트한 베이핑 환경을 지향합니다.
             </p>
 
-            <h2>주요 기능</h2>
+            <h2>⚡ 주요 기능</h2>
             <ul>
                 <li><strong>국내 6대 주요 몰 실시간 가격 비교</strong>: 모두의액상, 샤슈컴퍼니, 액상24, 99액상 등 주요 샵의 데이터를 한눈에 확인 가능</li>
                 <li><strong>지능형 상품 병합</strong>: 동일한 제품의 다양한 이름을 하나로 묶어 가장 낮은 가격을 즉시 안내</li>
@@ -113,22 +219,18 @@
                 <li><strong>자유게시판</strong>: 베이퍼들간의 정보 교류와 자유로운 소통 공간 제공</li>
             </ul>
 
-            <h2>안내사항</h2>
+            <h2>📝 안내사항</h2>
             <p>액상픽에서 제공하는 가격은 각 판매처의 실시간 정보를 바탕으로 하나, 이벤트나 쿠폰 적용 등에 따라 실제 결제 금액과 차이가 있을 수 있으므로 반드시 판매 사이트에서 확인해 주시기
-                바랍니다.
-            </p>
+                바랍니다.</p>
         </div>
 
+        <div class="footer-links">
+            <a href="terms.html">이용약관</a> |
+            <a href="privacy.html">개인정보처리방침</a> |
+            <a href="mailto:contact@juicepick.github.io">문의하기</a>
+            <p style="margin-top: 15px;">&copy; 2026 JuicePick. All rights reserved.</p>
         </div>
-        <div style="max-width: 800px; margin: 30px auto 0; text-align: center; color: #666; font-size: 14px;">
-            <div style="margin-bottom: 10px;">
-                <a href="terms.html" style="text-decoration: none; color: #666; margin: 0 5px;">이용약관</a> |
-                <a href="privacy.html" style="text-decoration: none; color: #666; margin: 0 5px;">개인정보처리방침</a> |
-                <a href="mailto:contact@juicepick.github.io"
-                    style="text-decoration: none; color: #666; margin: 0 5px;">문의하기</a>
-            </div>
-            &copy; 2026 JuicePick. All rights reserved.
-        </div>
-    </body>
+    </div>
+</body>
 
 </html>

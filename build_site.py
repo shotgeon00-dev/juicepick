@@ -513,7 +513,7 @@ def generate_report(data, sites):
             let allCards = [];
             let filteredCards = [];
             let currentPage = 1;
-            const itemsPerPage = 52;
+            const itemsPerPage = 40;
             let currentCategory = 'all';
 
             window.onload = function() {{
@@ -612,11 +612,6 @@ def generate_report(data, sites):
                         setTimeout(() => window.location.reload(), 200);
                     }};
                 }}
-                
-                initTheme();
-                checkIOS();
-                sortData();
-            }};
 
             // [수정] 기본 테마: 라이트모드 고정 (시스템 설정 무시)
             function initTheme() {{
