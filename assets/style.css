@@ -288,7 +288,8 @@ main {
     color: white;
 }
 
-.category-tag.과일\/멘솔 {
+.category-tag.과일\/멘솔,
+.category-tag.과일-멘솔 {
     background: #e056fd;
     color: white;
 }
