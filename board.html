@@ -14,23 +14,49 @@
             --sky-blue: #4facfe;
             --bg: #f5f7fa;
             --text: #2f3640;
+            --text-light: #5f6e7c;
             --border: #dfe6e9;
             --white: #ffffff;
             --gray: #7f8c8d;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(255, 255, 255, 0.8);
+            --form-bg: white;
+            --comment-bg: #f8f9fa;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1e272e;
+            --text: #f5f6fa;
+            --text-light: #dcdde1;
+            --border: rgba(255, 255, 255, 0.1);
+            --gray: #b2bec3;
+            --bg-gradient: linear-gradient(135deg, #1e272e 0%, #2f3640 100%);
+            --header-bg: rgba(30, 39, 46, 0.9);
+            --header-border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(30, 39, 46, 0.9);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --form-bg: #2f3640;
+            --comment-bg: #1e272e;
         }
 
         body {
             font-family: 'Pretendard', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
             padding-bottom: 40px;
+            color: var(--text);
+            margin: 0;
         }
 
         header {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--header-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid var(--header-border);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -76,6 +102,26 @@
             color: #4facfe;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 18px;
+        }
+
         main {
             max-width: 800px;
             margin: 40px auto;
@@ -112,11 +158,11 @@
         }
 
         .post-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             padding: 20px;
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--card-border);
             margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             cursor: pointer;
@@ -132,12 +178,12 @@
             font-size: 18px;
             font-weight: 700;
             margin-bottom: 10px;
-            color: #2f3640;
+            color: var(--text);
         }
 
         .post-meta {
             font-size: 13px;
-            color: #7f8c8d;
+            color: var(--gray);
             display: flex;
             gap: 15px;
         }
@@ -149,9 +195,9 @@
         .post-content {
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--border);
             font-size: 15px;
-            color: #57606f;
+            color: var(--text-light);
             white-space: pre-wrap;
             line-height: 1.7;
             display: none;
@@ -187,7 +233,7 @@
         /* Comments */
         .comment-section {
             margin-top: 20px;
-            background: #f8f9fa;
+            background: var(--comment-bg);
             border-radius: 12px;
             padding: 15px;
         }
@@ -195,7 +241,7 @@
         .comment-item {
             margin-bottom: 12px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border);
         }
 
         .comment-item:last-child {
@@ -206,13 +252,13 @@
 
         .comment-meta {
             font-size: 12px;
-            color: #999;
+            color: var(--gray);
             margin-bottom: 5px;
         }
 
         .comment-text {
             font-size: 14px;
-            color: #555;
+            color: var(--text-light);
         }
 
         .comment-form {
@@ -247,7 +293,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: var(--form-bg);
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
@@ -321,11 +367,16 @@
     <header>
         <nav class="nav-container">
             <a href="index.html" class="site-name">액상픽</a>
-            <ul class="nav-menu">
-                <li><a href="blog/index.html">가이드</a></li>
-                <li><a href="board.html" class="active">자유게시판</a></li>
-                <li><a href="about.html">서비스소개</a></li>
-            </ul>
+            <div class="nav-right">
+                <ul class="nav-menu">
+                    <li><a href="blog/index.html">가이드</a></li>
+                    <li><a href="board.html" class="active">자유게시판</a></li>
+                    <li><a href="about.html">서비스소개</a></li>
+                </ul>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
         </nav>
     </header>
 
@@ -472,6 +523,30 @@
                 list.appendChild(div);
             });
         });
+
+        // Theme functions
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                document.getElementById('theme-icon').className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        initTheme();
     </script>
 </body>
 
