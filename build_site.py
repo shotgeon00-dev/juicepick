@@ -231,9 +231,11 @@ def process_data():
                     "volume": norm['volume'], "image": img, "prices": {}, "views": views 
                 }
             
-            # [사용자 요청] 쥬스박스 상품명이 가장 정확하므로 쥬스박스 이름을 우선적으로 표시
+            # [수정] 쥬스박스 상품명에서 ml 뒤 '이미지' 등 불필요한 문자 제거
             if site == 'juicebox':
-                merged_data[m_key]["display_name"] = raw_name
+                import re as regex
+                cleaned_name = regex.sub(r'(\d+\s*[mM][lL]).*$', r'\1', raw_name)
+                merged_data[m_key]["display_name"] = cleaned_name
             
             current_site_price = merged_data[m_key]["prices"].get(site, {}).get("price", 999999)
             if price < current_site_price:
@@ -551,6 +553,11 @@ def generate_report(data, sites):
             </div>
         </div>
 
+        <!-- 맨 위로 가기 버튼 -->
+        <button id="scrollTopBtn" onclick="scrollToTop()" title="맨 위로">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+
         <script>
             // Firebase Config Injection
             const firebaseConfig = {{
@@ -862,6 +869,20 @@ def generate_report(data, sites):
                 document.getElementById('shopModal').classList.remove('active');
                 document.body.style.overflow = ''; // 스크롤 복원
             }};
+
+            // [NEW] 맨 위로 가기 버튼
+            window.scrollToTop = function() {{
+                window.scrollTo({{ top: 0, behavior: 'smooth' }});
+            }};
+            
+            window.addEventListener('scroll', function() {{
+                const btn = document.getElementById('scrollTopBtn');
+                if (window.scrollY > 300) {{
+                    btn.classList.add('visible');
+                }} else {{
+                    btn.classList.remove('visible');
+                }}
+            }});
 
             // [NEW] 즐겨찾기 기능
             function getFavorites() {{
