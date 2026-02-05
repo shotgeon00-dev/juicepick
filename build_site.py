@@ -576,7 +576,8 @@ def generate_report(data, sites):
                 if (currentCategory !== 'all') params.set('category', currentCategory);
                 
                 const newUrl = params.toString() ? '?' + params.toString() : window.location.pathname;
-                history.replaceState(null, '', newUrl);
+                // 실제 페이지 새로고침 (사용자 요청)
+                window.location.href = newUrl;
             }}
 
             window.onload = function() {{
@@ -759,11 +760,21 @@ def generate_report(data, sites):
                 updateUrlParams(); // URL 업데이트
             }};
             
-            // 검색 초기화 함수
+            // 검색 초기화 함수 (엔터 또는 버튼 클릭 시에만 검색)
             window.initSearch = function() {{
                 const searchInput = document.getElementById('mainSearch');
+                const searchBtn = document.querySelector('.search-btn');
+                
                 if (searchInput) {{
-                    searchInput.oninput = function() {{
+                    searchInput.onkeyup = function(e) {{
+                        if (e.key === 'Enter') {{
+                            applyFilters();
+                        }}
+                    }};
+                }}
+                if (searchBtn) {{
+                    searchBtn.onclick = function(e) {{
+                        e.preventDefault();
                         applyFilters();
                     }};
                 }}
