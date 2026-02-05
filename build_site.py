@@ -542,6 +542,15 @@ def generate_report(data, sites):
             </p>
         </footer>
 
+        <!-- 판매처 목록 모달 -->
+        <div id="shopModal" class="shop-modal" onclick="closeShopModal(event)">
+            <div class="shop-modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeShopModal()">&times;</button>
+                <h3 id="modalProductName" class="modal-title"></h3>
+                <div id="modalShopList" class="modal-shop-list"></div>
+            </div>
+        </div>
+
         <script>
             // Firebase Config Injection
             const firebaseConfig = {{
@@ -833,16 +842,25 @@ def generate_report(data, sites):
                 }}).catch(err => console.error("Views update failed", err));
             }}
 
-            // [기능 추가] 상점 목록 토글 (항상 목록 표시)
+            // [모달] 상점 목록 팝업 표시
             window.toggleShopList = function(btn, key, linkIfOne) {{
-                // 판매처가 1곳이든 여러 곳이든 항상 목록을 토글
-                const list = btn.nextElementSibling;
-                list.classList.toggle('active');
-                if (list.classList.contains('active')) {{
-                    btn.textContent = '목록 닫기';
-                }} else {{
-                    btn.textContent = '최저가 확인하기';
-                }}
+                const card = btn.closest('.product-card');
+                const productName = card.querySelector('.product-title').innerText;
+                const shopListHtml = btn.nextElementSibling.innerHTML;
+                
+                // 모달에 내용 채우기
+                document.getElementById('modalProductName').innerText = productName;
+                document.getElementById('modalShopList').innerHTML = shopListHtml;
+                
+                // 모달 표시
+                document.getElementById('shopModal').classList.add('active');
+                document.body.style.overflow = 'hidden'; // 스크롤 방지
+            }};
+            
+            window.closeShopModal = function(event) {{
+                if (event && event.target !== event.currentTarget) return;
+                document.getElementById('shopModal').classList.remove('active');
+                document.body.style.overflow = ''; // 스크롤 복원
             }};
 
             // [NEW] 즐겨찾기 기능

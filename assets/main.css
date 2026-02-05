@@ -859,3 +859,115 @@ footer {
         /* No mobile nav on desktop */
     }
 }
+
+/* 판매처 목록 모달 */
+.shop-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.shop-modal.active {
+    display: flex;
+}
+
+.shop-modal-content {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 450px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--primary);
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+    padding-right: 40px;
+    line-height: 1.4;
+}
+
+.modal-shop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-shop-list .shop-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s;
+}
+
+[data-theme="dark"] .modal-shop-list .shop-row {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.modal-shop-list .shop-row:hover {
+    background: rgba(79, 172, 254, 0.15);
+    border-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.modal-shop-list .shop-row span {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.modal-shop-list .shop-row .price-link {
+    font-weight: 800;
+    color: var(--price-color);
+    text-decoration: none;
+    font-size: 16px;
+}
