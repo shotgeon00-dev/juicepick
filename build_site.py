@@ -743,8 +743,8 @@ def generate_report(data, sites):
                 }}
             }}
 
-            // 통합 필터 함수 (검색어 + 카테고리) - URL 업데이트 포함
-            window.applyFilters = function() {{
+            // 통합 필터 함수 (검색어 + 카테고리) - URL 업데이트 없이 내부 필터링만
+            window.applyFilters = function(shouldNavigate = false) {{
                 const query = document.getElementById('mainSearch').value.toLowerCase().replace(/\\s+/g, '');
                 
                 filteredCards = allCards.filter(card => {{
@@ -757,10 +757,14 @@ def generate_report(data, sites):
                 
                 currentPage = 1; // 검색 시 1페이지로 리셋
                 sortData(false);
-                updateUrlParams(); // URL 업데이트
+                
+                // 검색 버튼/엔터로 트리거된 경우에만 URL 업데이트 (window.onload에서는 false)
+                if (shouldNavigate) {{
+                    updateUrlParams();
+                }}
             }};
             
-            // 검색 초기화 함수 (엔터 또는 버튼 클릭 시에만 검색)
+            // 검색 초기화 함수 (엔터 또는 버튼 클릭 시에만 검색 + URL 업데이트)
             window.initSearch = function() {{
                 const searchInput = document.getElementById('mainSearch');
                 const searchBtn = document.querySelector('.search-btn');
@@ -768,14 +772,14 @@ def generate_report(data, sites):
                 if (searchInput) {{
                     searchInput.onkeyup = function(e) {{
                         if (e.key === 'Enter') {{
-                            applyFilters();
+                            applyFilters(true); // shouldNavigate = true
                         }}
                     }};
                 }}
                 if (searchBtn) {{
                     searchBtn.onclick = function(e) {{
                         e.preventDefault();
-                        applyFilters();
+                        applyFilters(true); // shouldNavigate = true
                     }};
                 }}
             }};
