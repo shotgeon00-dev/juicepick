@@ -617,7 +617,7 @@ def generate_report(data, sites):
 
             // [DEBUG] 전역 에러 핸들링
             window.onerror = function(msg, url, line, col, error) {{
-                console.error("Error: " + msg + "\nurl: " + url + "\nline: " + line);
+                console.error("Error: " + msg + "\\nurl: " + url + "\\nline: " + line);
                 return false;
             }};
 
