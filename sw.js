@@ -1,4 +1,4 @@
-const CACHE_NAME = 'juicepick-v9'; // v9: Update for search fix
+const CACHE_NAME = 'juicepick-v11'; // v11: Force Sort Fix Update
 
 // Minimal install - just register, no pre-caching to avoid failures
 const ASSETS_TO_CACHE = [
@@ -8,7 +8,7 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('[SW v8] Installing...');
+  console.log('[SW v11] Installing...');
   self.skipWaiting(); // Force immediate activation
 });
 
