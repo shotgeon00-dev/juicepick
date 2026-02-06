@@ -68,12 +68,21 @@ SITE_NAME_MAP = {
     'juicebox': '쥬스박스', 'vape9': '베이프나인', 'juice23': '이삼액상'
 }
 
+# 브랜드 예외 처리 (분류 시 해당 단어 무시)
+BRAND_EXCEPTIONS = ["세븐코리아", "세븐데이즈"]
+
 def classify_category(name):
     name_lower = name.lower()
+    
+    # [FIX] 브랜드명으로 인한 오분류 방지 (예: 세븐코리아 -> 연초 오분류 방지)
+    temp_name_for_check = name_lower
+    for brand in BRAND_EXCEPTIONS:
+        temp_name_for_check = temp_name_for_check.replace(brand, "")
+        
     for k in CATEGORIES["연초"]:
-        if k in name_lower: return "연초"
+        if k in temp_name_for_check: return "연초"
     for k in CATEGORIES["디저트"]:
-        if k in name_lower: return "디저트"
+        if k in temp_name_for_check: return "디저트"
     return "과일/멘솔"
 
 def clean_junk_text(text):
@@ -207,7 +216,18 @@ def process_data():
             juice23_added = 0
         for item_key, item_val in site_data.items():
             raw_name = item_val.get('name', '')
-            price = item_val.get('price', 0)
+            raw_name = item_val.get('name', '')
+            
+            # [FIX] 가격 데이터 정제: 문자열일 경우 쉼표 제거 후 정수로 변환
+            raw_price = item_val.get('price', 0)
+            try:
+                if isinstance(raw_price, str):
+                    price = int(re.sub(r'[^\d]', '', raw_price))
+                else:
+                    price = int(raw_price)
+            except (ValueError, TypeError):
+                price = 0
+
             img = item_val.get('img') or item_val.get('image') or item_val.get('thumb') or ""
             link = item_val.get('link') or item_val.get('url') or ''
 
