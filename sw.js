@@ -1,4 +1,4 @@
-const CACHE_NAME = 'juicepick-v12'; // v12: Default Sort Price Low
+const CACHE_NAME = 'juicepick-v13'; // v13: Final Polish
 
 // Minimal install - just register, no pre-caching to avoid failures
 const ASSETS_TO_CACHE = [
@@ -8,7 +8,7 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('[SW v12] Installing...');
+  console.log('[SW v13] Installing...');
   self.skipWaiting(); // Force immediate activation
 });
 
