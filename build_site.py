@@ -69,7 +69,7 @@ SITE_NAME_MAP = {
 }
 
 # 브랜드 예외 처리 (분류 시 해당 단어 무시)
-BRAND_EXCEPTIONS = ["세븐코리아", "세븐데이즈", "세븐리퀴드"]
+BRAND_EXCEPTIONS = ["세븐코리아", "세븐데이즈", "세븐리퀴드", "세븐 포카리"]
 
 def classify_category(name):
     name_lower = name.lower()
@@ -342,7 +342,7 @@ def create_product_card_html(key, item, site_name_map, search_urls, rank=0):
     rank_badge = f'<div style="padding: 5px 10px; background: var(--primary); color: white; font-weight: bold; position: absolute; top: 0; left: 0; z-index: 10;">👑 추천 {rank}위</div>' if rank > 0 else ""
     
     return f"""
-    <div class="product-card" data-category="{item['category']}" data-price="{min_price}" data-views="{item.get('views', 0)}" data-sitecount="{site_count}" data-key="{key}" style="position: relative;">
+    <div class="product-card" data-category="{item['category']}" data-price="{int(min_price)}" data-views="{item.get('views', 0)}" data-sitecount="{site_count}" data-key="{key}" style="position: relative;">
         {rank_badge}
         <div class="card-image">
             <img src="{img_src}" loading="lazy" alt="{item['display_name']}" 
